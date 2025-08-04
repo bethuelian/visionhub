@@ -1,0 +1,687 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vision Hub Tanzania - Join Us</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .form-control {
+            @apply px-3 py-2 border border-gray-300 rounded-md focus: outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent;
+        }
+
+        .btn {
+            @apply px-4 py-2 rounded-md font-medium transition-colors duration-200;
+        }
+
+        .btn-primary {
+            @apply bg-blue-500 text-white hover: bg-blue-600;
+        }
+
+        .progress-bar {
+            @apply w-full bg-gray-200 rounded-full h-2;
+        }
+
+        .progress {
+            @apply bg-blue-500 h-2 rounded-full transition-all duration-300;
+        }
+
+        .tabs {
+            @apply border-b border-gray-200;
+        }
+
+        .tab {
+            @apply px-4 py-2 cursor-pointer border-b-2 border-transparent hover: border-gray-300 transition-colors duration-200;
+        }
+
+        .tab.active {
+            @apply border-blue-500 text-blue-500 font-medium;
+        }
+
+        .tab-content {
+            @apply hidden;
+        }
+
+        .tab-content.active {
+            @apply block;
+        }
+
+        .required-field::after {
+            content: " *";
+            color: #ef4444;
+        }
+
+        .skill-tag {
+            @apply bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-sm flex items-center;
+        }
+
+        .skill-remove {
+            @apply ml-2 cursor-pointer hover: text-red-500;
+        }
+
+        .error-message {
+            @apply text-red-500 text-sm mt-1;
+        }
+    </style>
+</head>
+
+{% csrf_token %}
+
+<body class="bg-gray-50">
+    <div class="container mx-auto py-16 px-4">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4">Join Vision Hub Tanzania</h2>
+            <div class="w-24 h-1 bg-blue-500 mx-auto mb-8"></div>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                Become part of our growing community of changemakers. Fill out the form below to start your journey with
+                us.
+            </p>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md p-8 max-w-4xl mx-auto">
+            <div class="progress-bar mb-8">
+                <div class="progress" id="form-progress" style="width: 25%;"></div>
+            </div>
+
+            <div class="tabs flex mb-6">
+                <div class="tab active" data-tab="personal">Personal Details</div>
+                <div class="tab" data-tab="background">Background</div>
+                <div class="tab" data-tab="experience">Experience</div>
+                <div class="tab" data-tab="motivation">Motivation</div>
+            </div>
+
+            <form method="post" action="{% url 'join' %}" id="membership-form">
+                {% csrf_token %}
+                <!-- Personal Details Tab -->
+                <div class="tab-content active" id="personal-tab">
+                    <h3 class="text-xl font-bold mb-6">Personal Information</h3>
+                    <div class="grid md:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <label for="first_name" class="block mb-2 font-medium required-field">First Name</label>
+                            <input type="text" id="first_name" name="first_name" class="form-control w-full" required>
+                            <div class="error-message hidden" id="first_name_error">This field is required</div>
+                        </div>
+                        <div>
+                            <label for="last_name" class="block mb-2 font-medium required-field">Last Name</label>
+                            <input type="text" id="last_name" name="last_name" class="form-control w-full" required>
+                            <div class="error-message hidden" id="last_name_error">This field is required</div>
+                        </div>
+                    </div>
+                    <div class="grid md:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <label for="email" class="block mb-2 font-medium required-field">Email</label>
+                            <input type="email" id="email" name="email" class="form-control w-full" required>
+                            <div class="error-message hidden" id="email_error">Please enter a valid email</div>
+                        </div>
+                        <div>
+                            <label for="phone" class="block mb-2 font-medium required-field">Phone Number</label>
+                            <input type="tel" id="phone" name="phone" class="form-control w-full" required>
+                            <div class="error-message hidden" id="phone_error">This field is required</div>
+                        </div>
+                    </div>
+                    <div class="grid md:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <label for="date_of_birth" class="block mb-2 font-medium required-field">Date of
+                                Birth</label>
+                            <input type="date" id="date_of_birth" name="date_of_birth" class="form-control w-full"
+                                required>
+                            <div class="error-message hidden" id="date_of_birth_error">This field is required</div>
+                        </div>
+                        <div>
+                            <label for="gender" class="block mb-2 font-medium required-field">Gender</label>
+                            <select id="gender" name="gender" class="form-control w-full" required>
+                                <option value="">Select Gender</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                                <option value="prefer-not-to-say">Prefer not to say</option>
+                            </select>
+                            <div class="error-message hidden" id="gender_error">This field is required</div>
+                        </div>
+                    </div>
+                    <div class="mb-6">
+                        <label for="id_number" class="block mb-2 font-medium required-field">National ID/Passport
+                            Number</label>
+                        <input type="text" id="id_number" name="id_number" class="form-control w-full" required>
+                        <div class="error-message hidden" id="id_number_error">This field is required</div>
+                    </div>
+                    <div class="flex justify-end">
+                        <button type="button" class="btn btn-primary px-6 py-2 rounded-full"
+                            data-next="background">Next</button>
+                    </div>
+                </div>
+
+                <!-- Background Tab -->
+                <div class="tab-content" id="background-tab">
+                    <h3 class="text-xl font-bold mb-6">Background Information</h3>
+                    <div class="mb-6">
+                        <label for="current_address" class="block mb-2 font-medium required-field">Current
+                            Address</label>
+                        <textarea id="current_address" name="current_address" class="form-control w-full" rows="3"
+                            required></textarea>
+                        <div class="error-message hidden" id="current_address_error">This field is required</div>
+                    </div>
+                    <div class="grid md:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <label for="region" class="block mb-2 font-medium required-field">Region</label>
+                            <select id="region" name="region" class="form-control w-full" required>
+                                <option value="">Select Region</option>
+                                <option value="dar-es-salaam">Dar es Salaam</option>
+                                <option value="arusha">Arusha</option>
+                                <option value="dodoma">Dodoma</option>
+                                <option value="mbeya">Mbeya</option>
+                                <option value="mwanza">Mwanza</option>
+                                <option value="other">Other</option>
+                            </select>
+                            <div class="error-message hidden" id="region_error">This field is required</div>
+                        </div>
+                        <div>
+                            <label for="district" class="block mb-2 font-medium required-field">District</label>
+                            <input type="text" id="district" name="district" class="form-control w-full" required>
+                            <div class="error-message hidden" id="district_error">This field is required</div>
+                        </div>
+                    </div>
+                    <div class="grid md:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <label for="education" class="block mb-2 font-medium required-field">Highest Education
+                                Level</label>
+                            <select id="education" name="education" class="form-control w-full" required>
+                                <option value="">Select Education Level</option>
+                                <option value="primary">Primary School</option>
+                                <option value="secondary">Secondary School</option>
+                                <option value="diploma">Diploma</option>
+                                <option value="bachelor">Bachelor's Degree</option>
+                                <option value="master">Master's Degree</option>
+                                <option value="phd">PhD</option>
+                                <option value="other">Other</option>
+                            </select>
+                            <div class="error-message hidden" id="education_error">This field is required</div>
+                        </div>
+                        <div>
+                            <label for="occupation" class="block mb-2 font-medium required-field">Current
+                                Occupation</label>
+                            <input type="text" id="occupation" name="occupation" class="form-control w-full" required>
+                            <div class="error-message hidden" id="occupation_error">This field is required</div>
+                        </div>
+                    </div>
+                    <div class="flex justify-between">
+                        <button type="button" class="btn border border-gray-300 px-6 py-2 rounded-full hover:bg-gray-50"
+                            data-prev="personal">Back</button>
+                        <button type="button" class="btn btn-primary px-6 py-2 rounded-full"
+                            data-next="experience">Next</button>
+                    </div>
+                </div>
+
+                <!-- Experience Tab -->
+                <div class="tab-content" id="experience-tab">
+                    <h3 class="text-xl font-bold mb-6">Experience & Skills</h3>
+                    <div class="mb-6">
+                        <label class="block mb-2 font-medium">Work Experience</label>
+                        <div id="work-experience-container">
+                            <div class="work-experience-item mb-4 p-4 border border-gray-200 rounded" data-index="1">
+                                <div class="grid md:grid-cols-2 gap-4 mb-4">
+                                    <div>
+                                        <label for="job_title_1" class="block mb-1">Job Title</label>
+                                        <input type="text" id="job_title_1" name="job_title_1"
+                                            class="form-control w-full">
+                                    </div>
+                                    <div>
+                                        <label for="company_1" class="block mb-1">Company/Organization</label>
+                                        <input type="text" id="company_1" name="company_1" class="form-control w-full">
+                                    </div>
+                                </div>
+                                <div class="grid md:grid-cols-2 gap-4 mb-4">
+                                    <div>
+                                        <label for="start_date_1" class="block mb-1">Start Date</label>
+                                        <input type="date" id="start_date_1" name="start_date_1"
+                                            class="form-control w-full">
+                                    </div>
+                                    <div>
+                                        <label for="end_date_1" class="block mb-1">End Date</label>
+                                        <input type="date" id="end_date_1" name="end_date_1"
+                                            class="form-control w-full">
+                                    </div>
+                                </div>
+                                <div>
+                                    <label for="responsibilities_1" class="block mb-1">Responsibilities</label>
+                                    <textarea id="responsibilities_1" name="responsibilities_1"
+                                        class="form-control w-full" rows="3"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" class="text-blue-500 mt-2 hover:text-blue-700" id="add-experience">
+                            <i class="fas fa-plus mr-1"></i> Add Another Experience
+                        </button>
+                    </div>
+                    <div class="mb-6">
+                        <label class="block mb-2 font-medium">Skills</label>
+                        <div class="flex flex-wrap gap-2 mb-2" id="skills-container">
+                            <!-- Skills will be added here -->
+                        </div>
+                        <div class="flex">
+                            <input type="text" id="new-skill-input" class="form-control flex-grow mr-2"
+                                placeholder="Add a skill">
+                            <button type="button" class="btn btn-primary px-4 py-2 rounded-full"
+                                id="add-skill">Add</button>
+                        </div>
+                        <input type="hidden" name="skills" id="skills-hidden">
+                    </div>
+                    <div class="mb-6">
+                        <label for="languages" class="block mb-2 font-medium">Languages Spoken</label>
+                        <select id="languages" name="languages" class="form-control w-full" multiple>
+                            <option value="swahili">Swahili</option>
+                            <option value="english">English</option>
+                            <option value="french">French</option>
+                            <option value="arabic">Arabic</option>
+                            <option value="other">Other</option>
+                        </select>
+                        <small class="text-gray-500">Hold Ctrl/Cmd to select multiple languages</small>
+                    </div>
+                    <div class="flex justify-between">
+                        <button type="button" class="btn border border-gray-300 px-6 py-2 rounded-full hover:bg-gray-50"
+                            data-prev="background">Back</button>
+                        <button type="button" class="btn btn-primary px-6 py-2 rounded-full"
+                            data-next="motivation">Next</button>
+                    </div>
+                </div>
+
+                <!-- Motivation Tab -->
+                <div class="tab-content" id="motivation-tab">
+                    <h3 class="text-xl font-bold mb-6">Your Motivation</h3>
+                    <div class="mb-6">
+                        <label for="why_join" class="block mb-2 font-medium required-field">Why do you want to join
+                            Vision Hub Tanzania?</label>
+                        <textarea id="why_join" name="why_join" class="form-control w-full" rows="4"
+                            required></textarea>
+                        <div class="error-message hidden" id="why_join_error">This field is required</div>
+                    </div>
+                    <div class="mb-6">
+                        <label for="contribution" class="block mb-2 font-medium required-field">What skills or
+                            experiences can you contribute to our community?</label>
+                        <textarea id="contribution" name="contribution" class="form-control w-full" rows="4"
+                            required></textarea>
+                        <div class="error-message hidden" id="contribution_error">This field is required</div>
+                    </div>
+                    <div class="mb-6">
+                        <label for="expectations" class="block mb-2 font-medium required-field">What do you hope to gain
+                            from being part of Vision Hub Tanzania?</label>
+                        <textarea id="expectations" name="expectations" class="form-control w-full" rows="4"
+                            required></textarea>
+                        <div class="error-message hidden" id="expectations_error">This field is required</div>
+                    </div>
+                    <div class="mb-6">
+                        <label for="referral" class="block mb-2 font-medium">How did you hear about us?</label>
+                        <select id="referral" name="referral" class="form-control w-full">
+                            <option value="">Select Option</option>
+                            <option value="friend">Friend/Family</option>
+                            <option value="social-media">Social Media</option>
+                            <option value="event">Community Event</option>
+                            <option value="search">Online Search</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="mb-6">
+                        <div class="flex items-start">
+                            <input type="checkbox" id="agree_terms" name="agree_terms" class="mt-1 mr-2" required>
+                            <label for="agree_terms" class="text-gray-700">I agree to the <a href="#"
+                                    class="text-blue-500 hover:underline">Terms & Conditions</a> and <a href="#"
+                                    class="text-blue-500 hover:underline">Privacy Policy</a> of Vision Hub
+                                Tanzania</label>
+                        </div>
+                        <div class="error-message hidden" id="agree_terms_error">You must agree to the terms and
+                            conditions</div>
+                    </div>
+                    <div class="flex justify-between">
+                        <button type="button" class="btn border border-gray-300 px-6 py-2 rounded-full hover:bg-gray-50"
+                            data-prev="experience">Back</button>
+                        <button type="submit" class="btn btn-primary px-6 py-2 rounded-full">Submit Application</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        class MembershipForm {
+            constructor() {
+                this.currentTab = 'personal';
+                this.tabs = ['personal', 'background', 'experience', 'motivation'];
+                this.formData = {};
+                this.skills = [];
+                this.experienceCount = 1;
+
+                this.init();
+            }
+
+            init() {
+                this.attachEventListeners();
+                this.updateProgressBar();
+                this.saveFormData(); // Initial save
+            }
+
+            attachEventListeners() {
+                // Tab navigation buttons
+                document.querySelectorAll('[data-next]').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const nextTab = e.target.getAttribute('data-next');
+                        if (this.validateCurrentTab()) {
+                            this.switchTab(nextTab);
+                        }
+                    });
+                });
+
+                document.querySelectorAll('[data-prev]').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const prevTab = e.target.getAttribute('data-prev');
+                        this.switchTab(prevTab);
+                    });
+                });
+
+                // Tab click navigation
+                document.querySelectorAll('.tab').forEach(tab => {
+                    tab.addEventListener('click', (e) => {
+                        const tabName = e.target.getAttribute('data-tab');
+                        this.switchTab(tabName);
+                    });
+                });
+
+                // Skills functionality
+                document.getElementById('add-skill').addEventListener('click', () => {
+                    this.addSkill();
+                });
+
+                document.getElementById('new-skill-input').addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        this.addSkill();
+                    }
+                });
+
+                // Work experience functionality
+                document.getElementById('add-experience').addEventListener('click', () => {
+                    this.addWorkExperience();
+                });
+
+                // Form submission
+                document.getElementById('membership-form').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.submitForm();
+                });
+
+                // Auto-save on input changes
+                document.querySelectorAll('input, textarea, select').forEach(input => {
+                    input.addEventListener('change', () => {
+                        this.saveFormData();
+                    });
+                });
+            }
+
+            switchTab(tabName) {
+                if (!this.tabs.includes(tabName)) return;
+
+                // Hide current tab
+                document.getElementById(`${this.currentTab}-tab`).classList.remove('active');
+                document.querySelector(`[data-tab="${this.currentTab}"]`).classList.remove('active');
+
+                // Show new tab
+                document.getElementById(`${tabName}-tab`).classList.add('active');
+                document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+
+                this.currentTab = tabName;
+                this.updateProgressBar();
+                this.saveFormData();
+            }
+
+            updateProgressBar() {
+                const tabIndex = this.tabs.indexOf(this.currentTab);
+                const progress = ((tabIndex + 1) / this.tabs.length) * 100;
+                document.getElementById('form-progress').style.width = `${progress}%`;
+            }
+
+            validateCurrentTab() {
+                const currentTabElement = document.getElementById(`${this.currentTab}-tab`);
+                const requiredFields = currentTabElement.querySelectorAll('[required]');
+                let isValid = true;
+
+                // Clear previous errors
+                currentTabElement.querySelectorAll('.error-message').forEach(error => {
+                    error.classList.add('hidden');
+                });
+
+                requiredFields.forEach(field => {
+                    if (!field.value.trim()) {
+                        isValid = false;
+                        const errorElement = document.getElementById(`${field.name}_error`);
+                        if (errorElement) {
+                            errorElement.classList.remove('hidden');
+                        }
+                        field.classList.add('border-red-500');
+                    } else {
+                        field.classList.remove('border-red-500');
+                    }
+                });
+
+                // Special validation for email
+                const emailField = document.getElementById('email');
+                if (emailField && emailField.value && !this.isValidEmail(emailField.value)) {
+                    isValid = false;
+                    document.getElementById('email_error').classList.remove('hidden');
+                    emailField.classList.add('border-red-500');
+                }
+
+                return isValid;
+            }
+
+            isValidEmail(email) {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return emailRegex.test(email);
+            }
+
+            addSkill() {
+                const skillInput = document.getElementById('new-skill-input');
+                const skill = skillInput.value.trim();
+
+                if (skill && !this.skills.includes(skill)) {
+                    this.skills.push(skill);
+                    this.renderSkills();
+                    skillInput.value = '';
+                    this.updateSkillsHidden();
+                }
+            }
+
+            removeSkill(skillToRemove) {
+                this.skills = this.skills.filter(skill => skill !== skillToRemove);
+                this.renderSkills();
+                this.updateSkillsHidden();
+            }
+
+            renderSkills() {
+                const container = document.getElementById('skills-container');
+                container.innerHTML = '';
+
+                this.skills.forEach(skill => {
+                    const skillTag = document.createElement('div');
+                    skillTag.className = 'skill-tag';
+                    skillTag.innerHTML = `
+                        ${skill}
+                        <span class="skill-remove" onclick="membershipForm.removeSkill('${skill}')">&times;</span>
+                    `;
+                    container.appendChild(skillTag);
+                });
+            }
+
+            updateSkillsHidden() {
+                document.getElementById('skills-hidden').value = JSON.stringify(this.skills);
+            }
+
+            addWorkExperience() {
+                this.experienceCount++;
+                const container = document.getElementById('work-experience-container');
+
+                const experienceItem = document.createElement('div');
+                experienceItem.className = 'work-experience-item mb-4 p-4 border border-gray-200 rounded';
+                experienceItem.setAttribute('data-index', this.experienceCount);
+
+                experienceItem.innerHTML = `
+                    <div class="flex justify-between items-center mb-4">
+                        <h4 class="font-medium">Experience ${this.experienceCount}</h4>
+                        <button type="button" class="text-red-500 hover:text-red-700" onclick="this.parentElement.parentElement.remove()">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                    <div class="grid md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label for="job_title_${this.experienceCount}" class="block mb-1">Job Title</label>
+                            <input type="text" id="job_title_${this.experienceCount}" name="job_title_${this.experienceCount}" class="form-control w-full">
+                        </div>
+                        <div>
+                            <label for="company_${this.experienceCount}" class="block mb-1">Company/Organization</label>
+                            <input type="text" id="company_${this.experienceCount}" name="company_${this.experienceCount}" class="form-control w-full">
+                        </div>
+                    </div>
+                    <div class="grid md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label for="start_date_${this.experienceCount}" class="block mb-1">Start Date</label>
+                            <input type="date" id="start_date_${this.experienceCount}" name="start_date_${this.experienceCount}" class="form-control w-full">
+                        </div>
+                        <div>
+                            <label for="end_date_${this.experienceCount}" class="block mb-1">End Date</label>
+                            <input type="date" id="end_date_${this.experienceCount}" name="end_date_${this.experienceCount}" class="form-control w-full">
+                        </div>
+                    </div>
+                    <div>
+                        <label for="responsibilities_${this.experienceCount}" class="block mb-1">Responsibilities</label>
+                        <textarea id="responsibilities_${this.experienceCount}" name="responsibilities_${this.experienceCount}" class="form-control w-full" rows="3"></textarea>
+                    </div>
+                `;
+
+                container.appendChild(experienceItem);
+
+                // Add event listeners for new inputs
+                experienceItem.querySelectorAll('input, textarea').forEach(input => {
+                    input.addEventListener('change', () => {
+                        this.saveFormData();
+                    });
+                });
+            }
+
+            saveFormData() {
+                const form = document.getElementById('membership-form');
+                const formData = new FormData(form);
+
+                // Save to memory (in a real app, you'd save to localStorage or send to server)
+                this.formData = {};
+                for (let [key, value] of formData.entries()) {
+                    if (this.formData[key]) {
+                        // Handle multiple values (like languages)
+                        if (Array.isArray(this.formData[key])) {
+                            this.formData[key].push(value);
+                        } else {
+                            this.formData[key] = [this.formData[key], value];
+                        }
+                    } else {
+                        this.formData[key] = value;
+                    }
+                }
+
+                // Add skills
+                this.formData.skills = this.skills;
+
+                console.log('Form data saved:', this.formData);
+            }
+
+            submitForm() {
+                // Validate all tabs
+                let allValid = true;
+                this.tabs.forEach(tab => {
+                    const originalTab = this.currentTab;
+                    this.currentTab = tab;
+                    if (!this.validateCurrentTab()) {
+                        allValid = false;
+                    }
+                    this.currentTab = originalTab;
+                });
+
+                if (!allValid) {
+                    alert('Please fill in all required fields before submitting.');
+                    return;
+                }
+
+                // Final save
+                this.saveFormData();
+
+                // Prepare form data for submission
+                const formData = new FormData();
+
+                // Add all form fields
+                Object.keys(this.formData).forEach(key => {
+                    if (key === 'skills') {
+                        formData.append(key, JSON.stringify(this.skills));
+                    } else if (Array.isArray(this.formData[key])) {
+                        this.formData[key].forEach(value => {
+                            formData.append(key, value);
+                        });
+                    } else {
+                        formData.append(key, this.formData[key]);
+                    }
+                });
+
+                // Add CSRF token (if using Django's CSRF protection)
+                const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
+                if (csrfToken) {
+                    formData.append('csrfmiddlewaretoken', csrfToken.value);
+                }
+
+                // Show loading state
+                const submitBtn = document.querySelector('button[type="submit"]');
+                const originalText = submitBtn.textContent;
+                submitBtn.textContent = 'Submitting...';
+                submitBtn.disabled = true;
+
+                // Submit to Django backend
+                fetch('/join/', {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            return response.json().catch(() => ({ success: true }));
+                        } else {
+                            throw new Error('Network response was not ok');
+                        }
+                    })
+                    .then(data => {
+                        if (data.success !== false) {
+                            // Success - redirect to success page
+                            window.location.href = '/join/success/';
+                        } else {
+                            alert(data.message || 'Error submitting form. Please try again.');
+                            submitBtn.textContent = originalText;
+                            submitBtn.disabled = false;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('There was an error submitting your application. Please try again.');
+                        submitBtn.textContent = originalText;
+                        submitBtn.disabled = false;
+                    });
+            }
+        }
+
+        // Initialize the form when the page loads
+        let membershipForm;
+        document.addEventListener('DOMContentLoaded', function () {
+            membershipForm = new MembershipForm();
+        });
+    </script>
+</body>
+
+</html>
+{% endblock %}

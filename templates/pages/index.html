@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Home - Vision Hub Tanzania{% endblock %}
+
+{% block content %}
+<section class="container py-16">
+    <div class="text-center mb-16">
+        <h2 class="text-3xl md:text-4xl font-bold mb-4">Our Vision for Tanzania</h2>
+        <div class="w-24 h-1 bg-blue-500 mx-auto mb-8"></div>
+        <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+            Vision Hub Tanzania is a platform dedicated to empowering individuals and communities through collaboration,
+            mentorship, and skill development. We believe in the potential of every Tanzanian to create positive change.
+        </p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-8 mb-16">
+        <div class="card bg-white p-8 shadow-md">
+            <div class="text-blue-500 mb-4">
+                <i class="fas fa-hands-helping fa-3x"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-4">Community Support</h3>
+            <p class="text-gray-600">Connect with like-minded individuals who share your passion for making a difference
+                in Tanzania.</p>
+        </div>
+        <div class="card bg-white p-8 shadow-md">
+            <div class="text-blue-500 mb-4">
+                <i class="fas fa-graduation-cap fa-3x"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-4">Mentorship</h3>
+            <p class="text-gray-600">Learn from experienced mentors who can guide you in your personal and professional
+                journey.</p>
+        </div>
+        <div class="card bg-white p-8 shadow-md">
+            <div class="text-blue-500 mb-4">
+                <i class="fas fa-lightbulb fa-3x"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-4">Innovation</h3>
+            <p class="text-gray-600">Collaborate on innovative projects that address challenges and create opportunities
+                in our communities.</p>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="md:flex">
+            <div class="md:w-1/2 p-8">
+                <h3 class="text-2xl font-bold mb-4">Upcoming Events</h3>
+                <div class="mb-6">
+                    <div class="flex items-start mb-4">
+                        <div class="bg-blue-100 text-blue-800 rounded-full p-3 mr-4">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold">Community Meetup</h4>
+                            <p class="text-gray-600">June 15, 2025 | Dar es Salaam</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start mb-4">
+                        <div class="bg-blue-100 text-blue-800 rounded-full p-3 mr-4">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold">Leadership Workshop</h4>
+                            <p class="text-gray-600">July 2, 2025 | Online</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <div class="bg-blue-100 text-blue-800 rounded-full p-3 mr-4">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold">Innovation Challenge</h4>
+                            <p class="text-gray-600">August 10, 2025 | Arusha</p>
+                        </div>
+                    </div>
+                </div>
+                <a href="{% url 'community' %}">
+                    <button class="btn btn-primary px-6 py-2 rounded-full">
+                        View All Events
+                    </button>
+                </a>
+
+            </div>
+            <div class="md:w-1/2 bg-gray-100 flex items-center justify-center p-8">
+                <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
+                    alt="Community members" class="rounded-lg shadow-md w-full h-auto">
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

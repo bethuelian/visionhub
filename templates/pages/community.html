@@ -1,0 +1,414 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Community - Vision Hub Tanzania{% endblock %}
+
+{% block hero_content %}
+<div class="container py-20 text-center">
+    <h1 class="text-4xl md:text-6xl font-bold mb-6">Community Hub</h1>
+    <p class="text-xl md:text-2xl mb-8">Connect with mentors, role models, and fellow community members</p>
+</div>
+{% endblock %}
+
+{% block content %}
+<section class="container py-16">
+    <div class="text-center mb-12">
+        <h2 class="text-3xl md:text-4xl font-bold mb-4">Community Hub</h2>
+        <div class="w-24 h-1 bg-blue-500 mx-auto mb-8"></div>
+        <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+            Connect with mentors, role models, and fellow community members through our interactive platform.
+        </p>
+    </div>
+
+    <!-- Event Booking Section -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="text-2xl font-bold">Upcoming Events</h3>
+            {% if user.is_authenticated and user.customuser.is_admin %}
+            <a href="{% url 'admin_panel' %}" class="btn btn-primary px-4 py-2 rounded-full">
+                <i class="fas fa-plus mr-2"></i>Add Event
+            </a>
+            {% endif %}
+        </div>
+
+        {% if events %}
+        <div class="grid md:grid-cols-2 gap-6">
+            {% for event in events %}
+            <div
+                class="border-l-4 {% cycle 'border-blue-500' 'border-green-500' 'border-purple-500' 'border-orange-500' %} pl-4 mb-6 bg-gray-50 p-4 rounded-r-lg">
+                <div class="flex justify-between items-start mb-2">
+                    <h4 class="font-bold text-lg">{{ event.title }}</h4>
+                    <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">{{
+                        event.get_event_type_display }}</span>
+                </div>
+
+                <p class="text-gray-600 mb-2">
+                    <i class="fas fa-calendar-alt mr-2"></i>{{ event.date_time|date:"F j, Y - g:i A" }}
+                </p>
+
+                <p class="text-gray-600 mb-2">
+                    <i class="fas fa-map-marker-alt mr-2"></i>
+                    {% if event.is_online %}
+                    Online Event
+                    {% else %}
+                    {{ event.location }}
+                    {% endif %}
+                </p>
+
+                <p class="text-gray-600 mb-2">
+                    <i class="fas fa-clock mr-2"></i>Registration Deadline: {{ event.deadline|date:"F j, Y - g:i A" }}
+                </p>
+
+                <p class="text-gray-700 mb-4">{{ event.description|truncatewords:20 }}</p>
+
+                {% if event.price > 0 %}
+                <p class="text-gray-600 mb-2">
+                    <i class="fas fa-tag mr-2"></i>Price: ${{ event.price }}
+                </p>
+                {% endif %}
+
+                <div class="flex items-center justify-between">
+                    <span class="text-sm text-gray-500">
+                        {% if event.spots_remaining %}
+                        {{ event.spots_remaining }} spots remaining
+                        {% elif event.max_participants %}
+                        Event Full
+                        {% else %}
+                        Unlimited spots
+                        {% endif %}
+                    </span>
+
+                    {% if user.is_authenticated %}
+                    {% if user.customuser.is_community_member %}
+                    {% if event.can_book %}
+                    <button onclick="bookEvent('{{ event.id }}')"
+                        class="btn btn-primary px-4 py-2 rounded-full book-btn" data-event-id="{{ event.id }}">
+                        {% if event.id in user_bookings %}
+                        Booked ✓
+                        {% else %}
+                        Book Now
+                        {% endif %}
+                    </button>
+                    {% else %}
+                    <button class="btn bg-gray-400 text-white px-4 py-2 rounded-full cursor-not-allowed" disabled>
+                        {% if event.is_expired %}Expired{% elif event.is_full %}Full{% else %}Unavailable{% endif %}
+                    </button>
+                    {% endif %}
+                    {% else %}
+                    <button onclick="showMembershipRequired()" class="btn btn-secondary px-4 py-2 rounded-full">
+                        Join Community
+                    </button>
+                    {% endif %}
+                    {% else %}
+                    <a href="{% url 'login' %}" class="btn btn-primary px-4 py-2 rounded-full">
+                        Login to Book
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center py-8">
+            <i class="fas fa-calendar-times fa-3x text-gray-400 mb-4"></i>
+            <p class="text-gray-500">No upcoming events at the moment. Check back soon!</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Community Stats -->
+    <div class="bg-white rounded-lg shadow-md p-8 mb-8">
+        <h3 class="text-2xl font-bold mb-6 text-center">Community Statistics</h3>
+        <div class="grid md:grid-cols-4 gap-6">
+            <div class="text-center">
+                <div class="text-3xl font-bold text-blue-600 mb-2">{{ stats.active_members }}</div>
+                <div class="text-gray-600">Active Members</div>
+            </div>
+            <div class="text-center">
+                <div class="text-3xl font-bold text-green-600 mb-2">{{ stats.total_events }}</div>
+                <div class="text-gray-600">Events This Year</div>
+            </div>
+            <div class="text-center">
+                <div class="text-3xl font-bold text-purple-600 mb-2">{{ stats.mentorship_pairs }}</div>
+                <div class="text-gray-600">Mentorship Pairs</div>
+            </div>
+            <div class="text-center">
+                <div class="text-3xl font-bold text-orange-600 mb-2">{{ stats.active_projects }}</div>
+                <div class="text-gray-600">Active Projects</div>
+            </div>
+        </div>
+        <div class="text-center mt-4">
+            <small class="text-gray-500">Last updated: {{ stats.last_updated|date:"F j, Y g:i A" }}</small>
+        </div>
+    </div>
+
+    <!-- Community Reviews -->
+    <div class="bg-white rounded-lg shadow-md p-8 mb-8">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="text-2xl font-bold">Community Reviews</h3>
+            {% if user.is_authenticated and user.customuser.is_community_member %}
+            <button onclick="openReviewModal()" class="btn btn-primary px-4 py-2 rounded-full">
+                <i class="fas fa-star mr-2"></i>Write Review
+            </button>
+            {% endif %}
+        </div>
+
+        {% if reviews %}
+        <div class="grid md:grid-cols-2 gap-6">
+            {% for review in reviews %}
+            <div class="border border-gray-200 rounded-lg p-4">
+                <div class="flex items-center mb-3">
+                    <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mr-3">
+                        {% if review.user.profile_image %}
+                        <img src="{{ review.user.profile_image.url }}" alt="{{ review.user.full_name }}"
+                            class="w-12 h-12 rounded-full object-cover">
+                        {% else %}
+                        <i class="fas fa-user text-blue-600"></i>
+                        {% endif %}
+                    </div>
+                    <div class="flex-grow">
+                        <div class="font-bold">{{ review.user.full_name }}</div>
+                        <div class="flex items-center">
+                            {% for i in "12345" %}
+                            <i
+                                class="fas fa-star {% if forloop.counter <= review.rating %}text-yellow-500{% else %}text-gray-300{% endif %}"></i>
+                            {% endfor %}
+                            <span class="ml-2 text-sm text-gray-500">{{ review.created_at|date:"M j, Y" }}</span>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-gray-700">{{ review.comment }}</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% if reviews|length >= 4 %}
+        <div class="text-center mt-6">
+            <button onclick="loadMoreReviews()" class="btn btn-secondary px-6 py-2 rounded-full">
+                Load More Reviews
+            </button>
+        </div>
+        {% endif %}
+        {% else %}
+        <div class="text-center py-8">
+            <i class="fas fa-comments fa-3x text-gray-400 mb-4"></i>
+            <p class="text-gray-500">No reviews yet. Be the first to share your experience!</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Review Modal -->
+<div id="reviewModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+    <div class="flex items-center justify-center min-h-screen px-4">
+        <div class="bg-white rounded-lg p-6 w-full max-w-md">
+            <div class="flex justify-between items-center mb-4">
+                <h4 class="text-lg font-bold">Write a Review</h4>
+                <button onclick="closeReviewModal()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <form id="reviewForm">
+                {% csrf_token %}
+                <div class="mb-4">
+                    <label class="block mb-2 font-medium">Rating</label>
+                    <div class="flex space-x-1" id="starRating">
+                        <i class="fas fa-star text-2xl cursor-pointer text-gray-300" data-rating="1"></i>
+                        <i class="fas fa-star text-2xl cursor-pointer text-gray-300" data-rating="2"></i>
+                        <i class="fas fa-star text-2xl cursor-pointer text-gray-300" data-rating="3"></i>
+                        <i class="fas fa-star text-2xl cursor-pointer text-gray-300" data-rating="4"></i>
+                        <i class="fas fa-star text-2xl cursor-pointer text-gray-300" data-rating="5"></i>
+                    </div>
+                    <input type="hidden" id="ratingValue" name="rating" value="0">
+                </div>
+
+                <div class="mb-4">
+                    <label for="comment" class="block mb-2 font-medium">Comment</label>
+                    <textarea id="comment" name="comment" rows="4"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required></textarea>
+                </div>
+
+                <div class="flex justify-end space-x-2">
+                    <button type="button" onclick="closeReviewModal()"
+                        class="btn border border-gray-300 px-4 py-2 rounded-full">Cancel</button>
+                    <button type="submit" class="btn btn-primary px-4 py-2 rounded-full">Submit Review</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Membership Required Modal -->
+<div id="membershipModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+    <div class="flex items-center justify-center min-h-screen px-4">
+        <div class="bg-white rounded-lg p-6 w-full max-w-md">
+            <div class="text-center">
+                <i class="fas fa-users fa-3x text-blue-500 mb-4"></i>
+                <h4 class="text-lg font-bold mb-2">Community Membership Required</h4>
+                <p class="text-gray-600 mb-6">You need to be a community member to book events and participate in our
+                    programs.</p>
+
+                <div class="flex justify-center space-x-4">
+                    <button onclick="closeMembershipModal()"
+                        class="btn border border-gray-300 px-4 py-2 rounded-full">Close</button>
+                    <a href="{% url 'join' %}" class="btn btn-primary px-4 py-2 rounded-full">Join Community</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let selectedRating = 0;
+
+    // Star rating functionality
+    document.querySelectorAll('#starRating i').forEach(star => {
+        star.addEventListener('click', function () {
+            selectedRating = parseInt(this.dataset.rating);
+            document.getElementById('ratingValue').value = selectedRating;
+
+            // Update star display
+            document.querySelectorAll('#starRating i').forEach((s, index) => {
+                if (index < selectedRating) {
+                    s.classList.remove('text-gray-300');
+                    s.classList.add('text-yellow-500');
+                } else {
+                    s.classList.remove('text-yellow-500');
+                    s.classList.add('text-gray-300');
+                }
+            });
+        });
+    });
+
+    // Event booking
+    function bookEvent(eventId) {
+        fetch('/book-event/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: JSON.stringify({
+                event_id: eventId
+            })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update button
+                    const btn = document.querySelector(`[data-event-id="${eventId}"]`);
+                    btn.textContent = 'Booked ✓';
+                    btn.classList.remove('btn-primary');
+                    btn.classList.add('bg-green-500', 'text-white');
+                    btn.disabled = true;
+
+                    alert('Event booked successfully!');
+                    location.reload(); // Refresh to update spots remaining
+                } else {
+                    alert(data.message || 'Failed to book event');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while booking the event');
+            });
+    }
+
+    // Review modal functions
+    function openReviewModal() {
+        document.getElementById('reviewModal').classList.remove('hidden');
+    }
+
+    function closeReviewModal() {
+        document.getElementById('reviewModal').classList.add('hidden');
+        document.getElementById('reviewForm').reset();
+        selectedRating = 0;
+        document.querySelectorAll('#starRating i').forEach(s => {
+            s.classList.remove('text-yellow-500');
+            s.classList.add('text-gray-300');
+        });
+    }
+
+    // Membership modal functions
+    function showMembershipRequired() {
+        document.getElementById('membershipModal').classList.remove('hidden');
+    }
+
+    function closeMembershipModal() {
+        document.getElementById('membershipModal').classList.add('hidden');
+    }
+
+    // Review form submission
+    document.getElementById('reviewForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        if (selectedRating === 0) {
+            alert('Please select a rating');
+            return;
+        }
+
+        const formData = new FormData(this);
+
+        fetch('/submit-review/', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Review submitted successfully!');
+                    closeReviewModal();
+                    location.reload();
+                } else {
+                    alert(data.message || 'Failed to submit review');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while submitting your review');
+            });
+    });
+
+    // Close modals when clicking outside
+    document.addEventListener('click', function (e) {
+        if (e.target.id === 'reviewModal') {
+            closeReviewModal();
+        }
+        if (e.target.id === 'membershipModal') {
+            closeMembershipModal();
+        }
+    });
+</script>
+
+<style>
+    .card {
+        transition: transform 0.2s ease-in-out;
+    }
+
+    .card:hover {
+        transform: translateY(-2px);
+    }
+
+    .btn {
+        transition: all 0.2s ease-in-out;
+    }
+
+    .btn:hover {
+        transform: translateY(-1px);
+    }
+
+    .btn-primary {
+        @apply bg-blue-500 text-white hover: bg-blue-600;
+    }
+
+    .btn-secondary {
+        @apply bg-gray-500 text-white hover: bg-gray-600;
+    }
+
+    .form-control {
+        @apply px-3 py-2 border border-gray-300 rounded-md focus: outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent;
+    }
+</style>
+{% endblock %}

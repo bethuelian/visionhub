@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Application Submitted - Vision Hub Tanzania{% endblock %}
+
+{% block hero_content %}
+<div class="container py-20 text-center">
+    <div class="max-w-2xl mx-auto">
+        <div class="mb-8">
+            <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg class="w-10 h-10 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+            </div>
+            <h1 class="text-4xl md:text-6xl font-bold mb-6 text-gray-800">Thank You!</h1>
+            <p class="text-xl md:text-2xl mb-8 text-gray-600">Your application has been submitted successfully</p>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow-md p-8 text-left">
+            <h2 class="text-2xl font-bold mb-4 text-gray-800">What happens next?</h2>
+            
+            <div class="space-y-4">
+                <div class="flex items-start">
+                    <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-4 mt-1">
+                        <span class="text-blue-600 font-bold text-sm">1</span>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-gray-800">Application Review</h3>
+                        <p class="text-gray-600">Our team will review your application within 3-5 business days.</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-start">
+                    <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-4 mt-1">
+                        <span class="text-blue-600 font-bold text-sm">2</span>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-gray-800">Email Confirmation</h3>
+                        <p class="text-gray-600">You'll receive an email with the status of your application and next steps.</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-start">
+                    <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-4 mt-1">
+                        <span class="text-blue-600 font-bold text-sm">3</span>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-gray-800">Welcome to the Community</h3>
+                        <p class="text-gray-600">Once approved, you'll get access to our community platform and events.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-8 p-4 bg-blue-50 rounded-lg">
+                <h4 class="font-semibold text-blue-800 mb-2">Questions?</h4>
+                <p class="text-blue-700 text-sm">
+                    If you have any questions about your application, feel free to contact us at 
+                    <a href="mailto:info@visionhubtanzania.org" class="underline">info@visionhubtanzania.org</a>
+                </p>
+            </div>
+        </div>
+        
+        <div class="mt-8">
+            <a href="{% url 'home' %}" class="inline-block bg-blue-500 text-white px-8 py-3 rounded-full font-medium hover:bg-blue-600 transition-colors duration-200">
+                Return to Home
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<!-- Additional content can go here if needed -->
+{% endblock %}
