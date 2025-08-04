@@ -27,8 +27,7 @@ SECRET_KEY = 'django-insecure-k4beauw=uds(o_qd4)h3!7gfktmrao*a0xhb1e@53rf6+_3)7w
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'visionhub.onrender.com').split(',')
 
 # Application definition
 
